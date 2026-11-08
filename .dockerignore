@@ -3,3 +3,11 @@
 .aws
 .codex
 .env
+.env.*
+!.env.example
+docker/tls/
+.vscode/
+__pycache__/
+*.py[cod]
+.venv/
+venv/

@@ -78,6 +78,44 @@ This energy check does not identify speech.
 Predictions are `spoof` or `bonafide`. The saved score is the raw bonafide logit
 (output column 1), not a probability or calibrated confidence value.
 
+Each call also stores a duration-weighted average score and decision margin
+(bonafide logit minus spoof logit). Positive margins favor bonafide; negative
+margins favor spoof. Calls with no classified audio or a zero margin remain
+inconclusive. This aggregation is a research baseline, not calibrated confidence.
+
+Browser calls collect RTP statistics approximately once per second. The existing
+AASIST service stores and summarizes them in the same PostgreSQL database:
+
+| Table | Stored data |
+| --- | --- |
+| `experiment_calls` | Call outcome, weighted prediction, overall RTP summary, and codec history. |
+| `experiment_chunks` | Audio offsets, duration, classified/skipped status, and chunk RTP summary. |
+| `experiment_predictions` | Individual chunk labels, raw scores, and decision margins. |
+| `experiment_rtp_samples` | Raw packet counters, negotiated codec, jitter, RTT, and timing information. |
+
+All experiment tables share `call_id`. Call summaries include packet-loss
+percentage, worst chunk loss, and mean, 95th percentile, and maximum reported
+jitter and RTT. Repeated snapshots of the same receiver report are counted once.
+Missing receiver measurements remain unknown rather than zero.
+
+Loss percentages use packet-counter changes. If the browser does not expose
+receiver packet totals, `loss_counter_basis` is `sender_estimate`. The last
+receiver report may precede hangup; `loss_observed_until_ms` records that coverage.
+Chunk alignment uses synchronized browser timestamps and server audio offsets.
+It is approximate, and loss from reports spanning multiple chunks is allocated
+by time overlap. These estimates are labeled in the stored summaries. Jitter
+and RTT statistics describe unique receiver reports, not individual packets.
+
+Metrics collection currently covers browser calls. The configured codecs are
+G.711 PCMU/PCMA; Opus experiments require separate codec configuration. Predictions
+only store results and never flag or terminate a call. Dynamic transition
+experiments are outside this setup.
+
+After a batch or microphone call, **Download call report** exports the call
+outcomes, chunk results, and network summaries as JSON. Failed files are retried
+once; files that cannot be decoded appear in the report without a call UUID
+because no call was placed.
+
 Open `http://localhost:8000/admin/` to browse predictions and call records.
 The admin interface has no authentication and is bound to localhost by default.
 Predictions are stored in `experiment_predictions`; batch source filenames are
@@ -101,6 +139,10 @@ interactive documentation at `/docs`.
 | `GET /health` | Returns model availability; HTTP 503 if the model is unavailable. |
 | `POST /predict` | Accepts a WAV or FLAC multipart upload in the `file` field. |
 | `POST /experiment/calls` | Registers a `source_filename` and returns a call UUID. |
+| `GET /experiment/calls/clock` | Provides server time for approximate browser clock synchronization. |
+| `GET /experiment/calls/{call_id}` | Returns the stored call summary and chunk results. |
+| `POST /experiment/calls/{call_id}/rtp` | Stores an RTP statistics snapshot and updates network summaries. |
+| `POST /experiment/calls/{call_id}/result` | Stores the browser call outcome and collection errors. |
 
 ```sh
 curl -F 'file=@sample.wav' http://localhost:8000/predict

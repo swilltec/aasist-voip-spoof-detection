@@ -23,7 +23,7 @@ ADD --checksum=sha256:51d2d9cf0738172f61e2a384ec50a54a55363240f67c971ed55a92435b
 ADD https://raw.githubusercontent.com/clovaai/aasist/${AASIST_REVISION}/LICENSE ./LICENSE
 ADD https://raw.githubusercontent.com/clovaai/aasist/${AASIST_REVISION}/NOTICE ./NOTICE
 
-COPY app.py admin.py ./
+COPY app.py admin.py metrics.py ./
 
 EXPOSE 8000
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]

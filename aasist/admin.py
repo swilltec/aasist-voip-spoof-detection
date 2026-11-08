@@ -11,7 +11,7 @@ def setup_admin(app):
     )
     base = automap_base()
     base.prepare(autoload_with=engine, reflection_options={
-        "only": ["experiment_predictions", "cdr"],
+        "only": ["experiment_calls", "experiment_chunks", "experiment_predictions", "experiment_rtp_samples", "cdr"],
     })
 
     class ExperimentPredictionAdmin(ModelView, model=base.classes.experiment_predictions):
@@ -19,6 +19,33 @@ def setup_admin(app):
         name_plural = "Experiment predictions"
         column_list = "__all__"
         column_searchable_list = ["source_filename", "prediction", "model"]
+        column_default_sort = ("id", True)
+        can_create = False
+        can_edit = False
+        can_delete = False
+
+    class ExperimentCallAdmin(ModelView, model=base.classes.experiment_calls):
+        name = "Experiment call"
+        name_plural = "Experiment calls"
+        column_list = "__all__"
+        column_searchable_list = ["source_filename", "stream_status"]
+        can_create = False
+        can_edit = False
+        can_delete = False
+
+    class ExperimentChunkAdmin(ModelView, model=base.classes.experiment_chunks):
+        name = "Experiment chunk"
+        name_plural = "Experiment chunks"
+        column_list = "__all__"
+        column_default_sort = ("id", True)
+        can_create = False
+        can_edit = False
+        can_delete = False
+
+    class RtpSampleAdmin(ModelView, model=base.classes.experiment_rtp_samples):
+        name = "RTP sample"
+        name_plural = "RTP samples"
+        column_list = "__all__"
         column_default_sort = ("id", True)
         can_create = False
         can_edit = False
@@ -38,5 +65,8 @@ def setup_admin(app):
 
     admin = Admin(app, engine, title="AASIST Admin")
     admin.add_view(ExperimentPredictionAdmin)
+    admin.add_view(ExperimentCallAdmin)
+    admin.add_view(ExperimentChunkAdmin)
+    admin.add_view(RtpSampleAdmin)
     admin.add_view(CallRecordAdmin)
     return engine
