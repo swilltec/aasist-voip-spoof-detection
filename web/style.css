@@ -1,0 +1,36 @@
+:root { font-family: system-ui, sans-serif; color: #e8edf5; background: #10151d; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 32px 20px; }
+main { width: 100%; max-width: 520px; }
+.eyebrow { color: #8fa9c4; font-size: 12px; font-weight: 650; letter-spacing: .16em; }
+h1 { font-size: clamp(32px, 7vw, 44px); line-height: 1.1; letter-spacing: -.04em; margin: 18px 0; }
+.intro, .footnote, #detail { color: #a9b5c6; line-height: 1.6; }
+.intro { margin-bottom: 30px; }
+section { background: #19212d; border: 1px solid #303e50; padding: 28px; border-radius: 18px; }
+.line { display: flex; justify-content: space-between; align-items: center; padding-bottom: 22px; margin-bottom: 24px; border-bottom: 1px solid #303e50; }
+.line span { color: #a9b5c6; }
+.line strong { font-size: 22px; letter-spacing: .02em; }
+.buttons { display: flex; gap: 10px; }
+button { border: 0; border-radius: 8px; padding: 13px 20px; font: inherit; font-weight: 650; cursor: pointer; }
+#call, #start-batch { background: #a8eccd; color: #0e3022; flex: 1; }
+#hangup, #stop-batch { background: #3c2933; color: #ffb1bc; }
+button:disabled { opacity: .4; cursor: default; }
+button:focus-visible { outline: 2px solid #a8eccd; outline-offset: 4px; }
+.status { display: flex; gap: 10px; align-items: center; margin-top: 28px; font-size: 14px; }
+#dot { width: 8px; height: 8px; background: #8fa9c4; border-radius: 50%; flex-shrink: 0; }
+#dot[data-state="active"] { background: #a8eccd; }
+#dot[data-state="error"] { background: #ff99ab; }
+#detail { font-size: 13px; margin: 10px 0 0; min-height: 42px; }
+.footnote { font-size: 13px; margin-top: 22px; }
+.batch { margin-top: 24px; }
+.batch h2 { margin: 0; font-size: 22px; }
+.batch p { color: #a9b5c6; font-size: 13px; line-height: 1.6; }
+.batch label { display: block; font-size: 14px; margin: 20px 0 10px; }
+.batch input { width: 100%; min-width: 0; font: inherit; font-size: 13px; }
+.batch input:focus-visible { outline: 2px solid #a8eccd; outline-offset: 4px; }
+#batch-files { padding-left: 20px; margin-bottom: 0; max-height: 300px; overflow: auto; font-size: 13px; line-height: 1.6; }
+#batch-files:empty { display: none; }
+#batch-files li { padding: 8px 0; overflow-wrap: anywhere; }
+#batch-files li[data-state="active"], #batch-files li[data-state="complete"] { color: #a8eccd; }
+#batch-files li[data-state="error"] { color: #ffb1bc; }
+@media (max-width: 380px) { .buttons { flex-direction: column; } }

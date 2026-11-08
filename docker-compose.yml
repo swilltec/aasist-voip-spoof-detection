@@ -1,0 +1,67 @@
+services:
+  postgres:
+    image: postgres:18-bookworm
+    environment:
+      POSTGRES_DB: asterisk
+      POSTGRES_USER: asterisk
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - postgres_data:/var/lib/postgresql
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U asterisk -d asterisk"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  asterisk:
+    build: .
+    container_name: asterisk
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      SIP_PASSWORD: ${SIP_PASSWORD:?Set SIP_PASSWORD in .env}
+      LAN_IP: ${LAN_IP:?Set LAN_IP to this host's local network IPv4 address in .env}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      aasist:
+        condition: service_healthy
+    ports:
+      - "5060:5060/udp"
+      - "127.0.0.1:8088:8088"
+      - "10000-10100:10000-10100/udp"
+
+  aasist:
+    build: ./aasist
+    environment:
+      PGHOST: postgres
+      PGDATABASE: asterisk
+      PGUSER: asterisk
+      PGPASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8000:8000"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2)"]
+      interval: 15s
+      timeout: 5s
+      start_period: 60s
+      retries: 3
+
+  web:
+    image: nginx:alpine
+    depends_on:
+      - asterisk
+    ports:
+      - "8080:80"
+      - "8443:443"
+    volumes:
+      - ./web:/usr/share/nginx/html:ro
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./docker/tls:/etc/nginx/tls:ro
+
+volumes:
+  postgres_data:

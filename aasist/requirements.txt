@@ -1,0 +1,10 @@
+torch==2.15.0
+numpy==2.5.4
+soundfile==0.14.0
+scipy==1.18.1
+fastapi==0.162.0
+uvicorn==0.54.0
+python-multipart==0.0.33
+psycopg[binary]>=3.2,<4
+sqladmin==0.32.0
+sqlalchemy[asyncio]>=2.0,<3

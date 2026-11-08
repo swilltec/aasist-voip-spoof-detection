@@ -1,0 +1,23 @@
+CREATE TABLE cdr (
+    id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    start timestamp with time zone,
+    answer timestamp with time zone,
+    "end" timestamp with time zone,
+    clid text,
+    src text,
+    dst text,
+    dcontext text,
+    channel text,
+    dstchannel text,
+    lastapp text,
+    lastdata text,
+    duration integer,
+    billsec integer,
+    disposition text,
+    amaflags integer,
+    accountcode text,
+    uniqueid text,
+    linkedid text,
+    userfield text,
+    sequence integer
+);

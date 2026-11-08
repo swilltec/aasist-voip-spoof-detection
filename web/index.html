@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AASIST · Experiment</title>
+  <link rel="stylesheet" href="style.css">
+  <script id="sip-config" type="application/json">{"username": "1002", "password": "replace_with_SIP_PASSWORD"}</script>
+  <script defer src="vendor/jssip-3.10.0.min.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">AASIST / EXPERIMENT</p>
+    <h1>Start an experiment.</h1>
+    <p class="intro">Call and speak into your microphone. AASIST will analyze your audio and save its predictions.</p>
+    <section aria-label="Experiment call">
+      <div class="line"><span>Extension</span><strong>experiment</strong></div>
+      <form id="call-form">
+        <div class="buttons">
+          <button id="call" type="submit">Call experiment</button>
+          <button id="hangup" type="button" disabled>Hang up</button>
+        </div>
+      </form>
+      <div class="status" role="status" aria-live="polite"><span id="dot"></span><span id="status">Ready to call</span></div>
+      <p id="detail">Click Call experiment and allow microphone access when prompted.</p>
+    </section>
+    <p class="footnote">Speak normally after the call connects. Predictions are saved about every four seconds; silent and very quiet chunks are skipped. This call is silent; your voice is not played back.</p>
+    <section class="batch" aria-labelledby="batch-title">
+      <h2 id="batch-title">Call from audio files</h2>
+      <p>Select a folder. Each audio file plays directly into its own call to experiment, then the call ends. Failed files get one retry before continuing.</p>
+      <label for="audio-folder">Audio folder</label>
+      <input id="audio-folder" type="file" webkitdirectory multiple>
+      <p id="folder-detail">Choose a folder containing audio files. Files stay on your computer and stream through the call.</p>
+      <div class="buttons">
+        <button id="start-batch" type="button" disabled>Start batch</button>
+        <button id="stop-batch" type="button" disabled>Stop batch</button>
+      </div>
+      <ol id="batch-files" aria-label="Audio file queue" aria-live="polite" aria-relevant="additions text"></ol>
+    </section>
+  </main>
+</body>
+</html>

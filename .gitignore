@@ -1,0 +1,21 @@
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+docker/tls/
+.aws/
+
+# Editor and agent files
+.vscode/
+.agents/
+.codex/
+
+# Python caches and virtual environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Operating system files
+.DS_Store
+Thumbs.db
