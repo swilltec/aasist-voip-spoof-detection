@@ -25,7 +25,6 @@
       <div class="status" role="status" aria-live="polite"><span id="dot"></span><span id="status">Ready to call</span></div>
       <p id="detail">Click Call experiment and allow microphone access when prompted.</p>
     </section>
-    <p class="footnote">Speak normally after the call connects. Predictions are saved about every four seconds; silent and very quiet chunks are skipped. This call is silent; your voice is not played back.</p>
     <section class="batch" aria-labelledby="batch-title">
       <h2 id="batch-title">Call from audio files</h2>
       <p>Select a folder. Each audio file plays directly into its own call to experiment, then the call ends. Failed files get one retry before continuing.</p>
@@ -38,7 +37,7 @@
       </div>
       <ol id="batch-files" aria-label="Audio file queue" aria-live="polite" aria-relevant="additions text"></ol>
     </section>
-    <p class="footnote">Call results use a duration-weighted score across classified chunks. RTP measurements and results are saved for analysis; predictions do not interrupt calls.</p>
+    <br>
     <button id="download-report" type="button" disabled>Download call report</button>
   </main>
 </body>
